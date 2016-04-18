@@ -1,0 +1,20 @@
+{
+  "name": "WebDJ",
+  "version": "0.0.1",
+  "description": "Online audio processing app",
+  "main": "dj.js",
+  "scripts": {
+    "test": "echo \"Tesing ...\" && exit 1",
+    "build": "uglifyjs dj.js --source-map dj.map -o dj.min.js",
+    "start": "open index.html"
+  },
+  "keywords": [],
+  "author": "Yijie Wu",
+  "license": "MIT",
+  "devDependencies": {
+    "coffee-script": "1.10.0",
+    "karma": "0.13.22",
+    "qunitjs": "1.23.1",
+    "uglify-js": "2.6.2"
+  }
+}
