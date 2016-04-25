@@ -7,11 +7,77 @@
     <script src="lib/underscore-min.js"></script>
     <script src="lib/backbone-min.js"></script>
     <script src="lib/fabric.min.js"></script>
-    <script src="dj.min.js"></script>
+    <script src="lib/dsp.js"></script>
+
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        input.hidden {
+            display:none;
+        }
+    </style>
 </head>
 <body>
 <h1>Web DJ Demo</h1>
+<div id="test-panel">
+    <canvas id="wavform" width="500" height="300"></canvas>
+    <br>
 
+    <div class="Deck">
+        <input type="file" class="audio_in hidden" multiple>
+        <button class="choose_file">Choose local file</button>
+        <br>
+        <button class="audio_start">Play</button>
+        <br>
+        <input type="text" class="file_url">
+        <button class="remote_file">Choose by URL</button>
+        <br>
+    </div>
+
+
+
+    
+</div>
+
+
+<script src="src/app.js"></script>
+<script src="src/view.js"></script>
+<script type="text/javascript">
+
+
+
+
+
+
+    $(document).ready(function(){
+        // create elements and bind callbacks
+
+        var deck = new DeckCtrl();
+        var deckView = new DeckView('div.Deck', 'wavform');
+
+
+        $('div.Deck>input.audio_in').on('change', function(evt){
+            deck.readAudio(evt.target.result);
+        });
+        $('div.Deck>button.choose_file').on('click', function(){
+            $('div.DeckControls>input.audio_in').click();
+        });
+        $('div.Deck>button.audio_start').on('click', function(){
+            deck.start();
+        });
+
+
+        $('div.Deck>button.remote_file').on('click', function(){
+            var url = $('div.DeckControls>input.file_url').val();
+            deck.readAudio(url);
+
+        });
+
+
+
+    });
+
+
+
+</script>
 </body>
 </html>
