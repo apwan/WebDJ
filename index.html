@@ -8,69 +8,308 @@
     <script src="lib/backbone-min.js"></script>
     <script src="lib/fabric.min.js"></script>
     <script src="lib/dsp.js"></script>
+    <script src="lib/soundtouch.min.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
+        html {
+            background: url(img/bg.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        body { background-color: transparent; }
         input.hidden {
             display:none;
         }
+        img.logo {
+            width:40px;
+            height:40px;
+        }
+        div.song-name {
+            position:relative;
+
+        }
+        div.canvas-holder{
+            border-left:1px solid;
+        }
+        div.row.trk{
+            border: 1px solid;
+        }
+        div.panel{
+            background-color: transparent;
+        }
+        div.col{
+            height: 100%;
+            padding: 1px;
+
+        }
+        div#loaded_tracks{
+            background-color: #E0F2BE;
+        }
+
+
+
     </style>
 </head>
 <body>
-<h1>Web DJ Demo</h1>
-<div id="test-panel">
-    <canvas id="wavform" width="500" height="300"></canvas>
-    <br>
 
-    <div class="Deck">
-        <input type="file" class="audio_in hidden" multiple>
-        <button class="choose_file">Choose local file</button>
-        <br>
-        <button class="audio_start">Play</button>
-        <br>
-        <input type="text" class="file_url">
-        <button class="remote_file">Choose by URL</button>
-        <br>
+
+
+
+<nav id="top-menu" class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img class="logo" src="img/logo.png"></a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Web DJ<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">Demo</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Settings <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!--
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            -->
+            <ul class="nav navbar-nav navbar-right navbar-inverse">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Help<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+                <li><a href="about.pdf" target="_blank">About</a></li>
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</nav>
+
+
+
+<div class="container-fluid">
+
+<div class="row panel default rhythm">
+    <canvas id="rhythm" width="800" height="40"></canvas>
+</div>
+
+
+
+<div class="row Deck-panel">
+    <div id="DJ-panel-1" class="panel panel-primary col-xs-8 col-md-5">
+        <div class="panel-heading">
+            <h3 class="panel-title">Song Name</h3>
+        </div>
+        <div  class="panel-body row">
+            <div class="canvas_holder col-md-9">
+                <canvas id="wavform-1"  ></canvas>
+            </div>
+            <div class="canvas_holder col-md-3">
+                <canvas id="ctrls-1"  ></canvas>
+            </div>
+
+        </div>
+        <div class="panel-footer container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3 class="panel-title">Left Deck</h3>
+                </div>
+                <div class="Deck col-md-2" data-trkNo="1">
+                    <button  class="btn btn-default audio_start">Play</button>
+                </div>
+                <div class="col-md-4">
+                    other controls
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="col-md-1">
+        <h3></h3>
     </div>
 
 
 
-    
+    <div id="DJ-panel-2" class="panel panel-primary col-xs-8 col-md-5">
+        <div class="panel-heading">
+            <h3 class="panel-title">Song Name</h3>
+        </div>
+        <div class="panel-body row">
+            <div class="canvas_holder col-md-3">
+                <canvas id="ctrls-2"></canvas>
+            </div>
+            <div class="canvas_holder col-md-9">
+                <canvas id="wavform-2"  ></canvas>
+            </div>
+        </div>
+        <div class="panel-footer"><div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3 class="panel-title">Right Deck</h3>
+                </div>
+                <div class="Deck col-md-2" data-trkNo="2">
+                    <button  class="btn btn-default audio_start">Play</button>
+                </div>
+                <div class="col-md-4">
+                    other controls
+                </div>
+            </div>
+        </div></div>
+    </div>
 </div>
+<div class="row lower-deck">
+
+        <!-- information -->
+        <div class="panel col-lg-2 col-md-2 pull-left">
+            <div class="panel-body">
+
+            </div>
+        </div>
+
+        <div class="panel col-lg-8 col-md-8 pull-right "> <!-- Load Songs-->
+            <div class="container-fluid" id="loaded_tracks" data-total="2">
+                <div class="row input-group" id="trackheader">
+                    <div class="col col-md-3 col-lg-3"><div class="input-group">
+                        <span class="input-group-addon">No.</span>
+                        <span class="input-group-addon" id="load-left">Left</span>
+                        <span class="input-group-addon" id="load-right">Right</span>
+                    </div></div>
+                    <div class="col-md-9 col-lg-9"><div class="input-group">
+                        <input type="text" class="form-control file-url" id="file-url" placeholder="URL or local files, leave empty to browse ...">
+                        <span class="input-group-btn">
+                            <input id="browse-file" class="hidden" type="file" names="files" multiple>
+                            <button class="btn btn-default" id="load-url">Load</button>
+                        </span>
+
+                    </div></div>
+                </div>
+                <div class="row trk">
+                    <div class="col col-md-4 col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><label class="label label-default">0</label></span>
+                            <span class="input-group-addon">
+                                <input name="song-deck-1" value="0" type="radio" aria-label="...">
+                            </span>
+                            <span class="input-group-addon">
+                                <input name="song-deck-2" value="0" type="radio" aria-label="...">
+                            </span>
+                            <span class="input-group-btn">
+                            <button class="btn btn-default">Play</button>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="col col-md-2 col-lg-2 song-name"><h4><label class="label label-info">Example</label></h4></div>
+                    <div class="col-md-6 col-lg-6 canvas-holder"><canvas width="240" height="50"></canvas></div>
+                </div>
+
+            </div>
 
 
-<script src="src/app.js"></script>
+        </div>
+
+</div></div><!-- toplevel wrap -->
+
+<nav id="bottom-menu" class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img class="logo" src="img/logo.png"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav">
+                <li><a href="#">Source Code</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Tutorial</a></li>
+            </ul>
+        </div> <!-- /.navbar-collapse -->
+
+    </div>
+</nav>
+
+<script src="src/model.js"></script>
 <script src="src/view.js"></script>
+<script src="dj.js"></script>
+
 <script type="text/javascript">
 
 
 
-
-
-
     $(document).ready(function(){
-        // create elements and bind callbacks
-
-        var deck = new DeckCtrl();
-        var deckView = new DeckView('div.Deck', 'wavform');
+        // create elements and bind callback
 
 
-        $('div.Deck>input.audio_in').on('change', function(evt){
-            deck.readAudio(evt.target.result);
+        setUpDecks(2);
+        $('#browse-file').on('change',function(evt){
+            handleLoading(evt.target.files[0]);
         });
-        $('div.Deck>button.choose_file').on('click', function(){
-            $('div.DeckControls>input.audio_in').click();
-        });
-        $('div.Deck>button.audio_start').on('click', function(){
-            deck.start();
-        });
-
-
-        $('div.Deck>button.remote_file').on('click', function(){
-            var url = $('div.DeckControls>input.file_url').val();
-            deck.readAudio(url);
+        $('#load-url').on('click', function(evt){
+            var url = $('input#file-url').val();
+            console.log(url);
+            if(url){
+                handleLoading(url);
+            }else{
+                $('#browse-file').click();
+            }
 
         });
+
+        $('#load-right').on('click', function(){
+            console.log('right');
+            let sl = getSong(2)-1;
+            if(LoadedTracks[sl]){
+                deckViews[1].readAudio(LoadedTracks[sl].buffer,LoadedTracks[sl].name,'dif');
+            }
+
+        });
+
+        $('#load-left').on('click', function(){
+            console.log('left');
+            let sl = getSong(1)-1;
+            if(LoadedTracks[sl]){
+                deckViews[0].readAudio(LoadedTracks[sl].buffer,LoadedTracks[sl].name);
+            }
+
+        });
+
 
 
 
