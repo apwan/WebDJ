@@ -1,0 +1,42 @@
+<script src="lib/underscore-min.js"></script>
+<script src="lib/soundtouch.min.js"></script>
+<script src="test.js"></script>
+<script>
+var count = 0;
+
+var context = context ||  new (AudioContext || webkitAudioContext)();
+
+function increment() {
+    console.log('increment');
+    if (count++ > 100) {
+        pause();
+        throw Error('whoa');
+    }
+}
+var buffer;
+var st;
+var loadSample = function (url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+
+    request.onload = function () {
+        console.log('url loaded');
+        context.decodeAudioData(request.response, function (decdata) {
+
+            buffer = decdata;
+            st = sndt(buffer);
+
+            console.log('loaded audio');
+
+        });
+        // createBuffer(request.response);
+    };
+
+    console.log('reading url');
+    request.send();
+};
+    loadSample('chopin.mp3');
+
+
+</script>
